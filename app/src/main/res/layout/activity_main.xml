@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_main"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    tools:context="au.edu.rmit.bluetoothcommunication.MainActivity">
+
+    <Button
+        android:id="@+id/btnONOFF"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:onClick="btnONOFF"
+        android:text="BT ON/OFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <Button
+        android:id="@+id/btnDiscoverability"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:onClick="btnDiscoverability"
+        android:text="DISCVBLTY"
+        android:layout_marginStart="35dp"
+        android:layout_marginLeft="35dp"
+        app:layout_constraintStart_toEndOf="@+id/btnONOFF"
+         />
+
+    <Button
+        android:id="@+id/btnFindUnpairedDevices"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:onClick="btnDiscover"
+        android:text="Discover"
+        android:layout_marginStart="35dp"
+        android:layout_marginLeft="35dp"
+        app:layout_constraintStart_toEndOf="@+id/btnDiscoverability" />
+
+    <Button
+        android:id="@+id/btnStartConnection"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Start Connection"
+        app:layout_constraintTop_toBottomOf="@+id/btnFindUnpairedDevices" />
+
+    <ListView
+        android:id="@+id/lvNewDevices"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="15dp"
+        android:layout_below="@id/btnFindUnpairedDevices"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnStartConnection" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/lvNewDevices"
+        android:hint="Enter Text Here"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lvNewDevices" />
+
+    <Button
+        android:id="@+id/btnSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lvNewDevices"
+        android:layout_marginTop="16dp"
+        android:layout_toRightOf="@+id/editText"
+        android:text="SEND"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText" />
+
+    <Button
+        android:id="@+id/buttonToggleGreenLed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onBBBClick"
+        android:text="GREEN"
+        android:layout_marginTop="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSend" />
+
+    <Button
+        android:id="@+id/buttonToggleRedLed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onBBBClick"
+        android:text="RED"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="50dp"
+        app:layout_constraintStart_toEndOf="@+id/buttonToggleGreenLed"
+        app:layout_constraintTop_toBottomOf="@+id/btnSend" />
+
+    <Button
+        android:id="@+id/buttonTogglePotOn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onBBBClick"
+        android:text="RECV"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="50dp"
+        app:layout_constraintStart_toEndOf="@+id/buttonToggleRedLed"
+        app:layout_constraintTop_toBottomOf="@+id/btnSend" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="50dp"
+        android:onClick="toSQLChild"
+        android:text="SQL"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonToggleRedLed" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

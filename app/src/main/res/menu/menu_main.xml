@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/..."
+    xmlns:app="http://schemas.android.com/..."
+    xmlns:tools="http://schemas.android.com/..."
+    xmlns:tools2="http://schemas.android.com/tools"
+    tools:context=".SQLChild"
+    tools2:ignore="NamespaceTypo">
+    <item android:id="@+id/action_settings" android:title="Settings"
+        android:orderincategory="2" app:showasaction="never"/>
+
+</menu>
