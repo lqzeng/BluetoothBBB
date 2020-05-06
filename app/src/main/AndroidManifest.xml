@@ -24,6 +24,10 @@
             android:name=".SQLChild"
             android:label="SQLChild">
             </activity>
+        <activity
+            android:name=".graphChild"
+            android:label="graphChild">
+            </activity>
         <activity android:name="au.edu.rmit.bluetoothcommunication.MainActivity"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>

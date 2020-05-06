@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private BluetoothSocket _socket = null;
 
     private static final int REQUEST_CODE = 10; // Code to send to child, and expect back.
+    private static final int REQUEST_CODE2 = 20;
 
 
     /** start methods **/
@@ -469,14 +470,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             _BB = BB;
         }
 
-        public String getResponse() {
-            return _stringBuilder.toString();
-        }
-
         public void run() {
             try {
-
-                _reader = new InputStreamReader(_socket.getInputStream(), "UTF-8");
                 _writer = new OutputStreamWriter(_socket.getOutputStream(), "UTF-8");
 
                 switch(_BB) {
@@ -497,15 +492,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         break;
                 }
 
-                final char[] buffer = new char[8];
-                while (true) {
-                    int size = _reader.read(buffer);
-                    if (size < 0) {
-                        break;
-                    } else {
-                        _stringBuilder.append(buffer, 0, size);
-                    }
-                }
 
             } catch (Exception exception) {
                 exception.printStackTrace();
@@ -613,7 +599,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // just debugging here or do something with data passed back
 
-        Log.d(TAG, "onActivityResult: returning from SQLChild");
+        Log.d(TAG, "onActivityResult: returning from secondary activity");
 
         super.onActivityResult(requestCode, resultCode, replyIntent);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) { // right child and OK result.
@@ -624,7 +610,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         }
 
+    }
 
+    public void toGraphChild(View view){
+
+        Intent myIntent = new Intent(MainActivity.this, graphChild.class);
+        startActivityForResult(myIntent, REQUEST_CODE2);
     }
 
     // hide keyboard method
@@ -637,6 +628,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         return super.dispatchTouchEvent(ev);
     }
+
 
 
     /** end of main **/
