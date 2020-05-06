@@ -22,9 +22,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
@@ -47,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     Button btnONOFF;
     Button btnStartConnection;
     Button btnSend;
+    Button btnReadFile;
+    Button btnDeleteFileContents;
 
     BluetoothConnectionService mBluetoothConnection;
 
@@ -218,6 +224,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         btnStartConnection = (Button)findViewById(R.id.btnStartConnection);
         btnSend = (Button) findViewById(R.id.btnSend);
         etSend = (EditText) findViewById(R.id.editText);
+        btnReadFile = (Button) findViewById(R.id.btnReadFile);
+        btnDeleteFileContents = (Button) findViewById(R.id.btnDeleteFileContents);
 
         // create TextView
         //currentStatus = (TextView) findViewById(R.id.currentStatus);
@@ -309,6 +317,34 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                             enableDisableBT();
                                         }
                                     }
+        );
+    }
+
+    // onClick method for reading file
+
+    public void btnReadFile(View view){
+
+        btnReadFile.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            Log.d(TAG, "onbtnReadFileClick: reading file.");
+                                            readFromFile(getApplicationContext());
+                                        }
+                                    }
+        );
+    }
+
+    // onClick for deleting file contents
+
+    public void btnDeleteFileContents(View view){
+
+        btnDeleteFileContents.setOnClickListener(new View.OnClickListener() {
+                                           @Override
+                                           public void onClick(View view) {
+                                               Log.d(TAG, "btnDeleteFileContents: clearing file contents.");
+                                               deleteFileContents();
+                                           }
+                                       }
         );
     }
 
@@ -503,6 +539,57 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Log.i(TAG, "unknown click event");
         }
 
+    }
+
+    /**
+    read from data file
+     */
+
+    private String readFromFile(Context context) {
+
+        String ret = "";
+
+        try {
+            InputStream inputStream = context.openFileInput("config.txt");
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append("\n").append(receiveString);
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+                Log.d(TAG, "FileRead: " + ret);
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+
+        return ret;
+    }
+
+    // function to delete file contents
+
+    private void deleteFileContents()
+    {
+        try{
+            String FILENAME = "config.txt";
+            OutputStreamWriter clearStreamWriter = new OutputStreamWriter(openFileOutput(FILENAME, Context.MODE_PRIVATE));
+            clearStreamWriter.write("");
+            Log.d(TAG, "deleteFileContents: successfully cleared " + FILENAME);
+            clearStreamWriter.close();
+        }
+        catch (IOException e){
+            Log.e("Exception", "File clear failed: " + e.toString());
+        }
     }
 
     /** code to move to SQL child page **/

@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcel;
 import android.os.ParcelUuid;
 import android.util.Log;
@@ -15,9 +16,14 @@ import android.view.View;
 
 import androidx.annotation.RequiresApi;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -288,6 +294,7 @@ public class BluetoothConnectionService {
         public void run() {
             byte[] buffer = new byte[1024];  // buffer store for the stream
 
+
             int bytes; // bytes returned from read()
 
             //Log.d(TAG, "inside ConnectedThrad.run()");
@@ -301,6 +308,9 @@ public class BluetoothConnectionService {
                     // convert buffer and bytes into string message
                     String incomingMessage = new String(buffer, 0, bytes);
                     Log.d(TAG, "InputStream: " + incomingMessage);
+
+                    //write to File
+                    writeToFile(incomingMessage, mContext);
                 } catch (IOException e) {
                     Log.e(TAG, "write: Error reading Input Stream. " + e.getMessage());
                     break;
@@ -356,6 +366,23 @@ public class BluetoothConnectionService {
 
     }
 
+    /**
+     * Code to receive pot data from BBB and do something with it
+     */
+
+    private void writeToFile(String data,Context context) {
+        try {
+            String FILENAME = "config.txt";
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(FILENAME, Context.MODE_APPEND));
+            outputStreamWriter.write(data + "\n");
+            Log.d(TAG, "writeTofile: written to " + FILENAME);
+            outputStreamWriter.close();
+
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
 
 
 }
