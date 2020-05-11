@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "buildings.db";
@@ -50,6 +51,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getAllData() {
+        String TAG = "getAllData";
+        Log.d(TAG, "inside getAllData()");
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select * from "+TABLE_NAME,null);
         return res;
