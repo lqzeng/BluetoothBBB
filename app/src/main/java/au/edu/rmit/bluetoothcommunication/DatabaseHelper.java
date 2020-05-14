@@ -58,6 +58,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return res;
     }
 
+    // getter for graph function
+    public Cursor getBuildingData(String buildingNumber){
+        String TAG = "getBuildingData";
+        Log.d(TAG, "inside getBuildingData(), looking for building " + buildingNumber);
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from buildings_table where name = ?" , new String[]{buildingNumber} );
+        Log.d(TAG, "returning to graph function");
+        return res;
+    }
+
     public boolean updateData(String id,String name,String traffic_count,String ventilation) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();

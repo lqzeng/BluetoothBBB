@@ -61,7 +61,7 @@ public class graphChild extends Activity {
         //graph labels
 
         GridLabelRenderer gridLabel = graph.getGridLabelRenderer();
-        gridLabel.setHorizontalAxisTitle("Seconds");
+        gridLabel.setHorizontalAxisTitle("Time Period");
         gridLabel.setVerticalAxisTitle("Ventilation Percentage");
 
 
@@ -78,9 +78,10 @@ public class graphChild extends Activity {
 
 
         String TAG = "graphDb";
-        
+
         // accessing the database here
-        Cursor res = myDb.getAllData();
+        //Cursor res = myDb.getAllData();
+        Cursor res = myDb.getBuildingData("building 80");
         if (res.getCount() == 0) {
             // show message
             Log.d(TAG, "Error: Nothing found");
@@ -98,11 +99,11 @@ public class graphChild extends Activity {
 
         for (String y : yval_db) {
             dataPoints.add(new DataPoint(x_count, Double.parseDouble(y)) );
-            x_count = x_count+1;
+            x_count = x_count+5;
         }
 
 
-        //Log.d(TAG, "showing dataPoints array" + dataPoints);
+        Log.d(TAG, "showing dataPoints array" + dataPoints);
 
         //making graph
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(dataPoints.toArray(new DataPoint[dataPoints.size()]));

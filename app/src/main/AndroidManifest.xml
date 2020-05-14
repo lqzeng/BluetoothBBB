@@ -28,6 +28,10 @@
             android:name=".graphChild"
             android:label="graphChild">
             </activity>
+        <activity
+            android:name=".BTChild"
+            android:label="BTChild">
+        </activity>
         <activity android:name="au.edu.rmit.bluetoothcommunication.MainActivity"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
