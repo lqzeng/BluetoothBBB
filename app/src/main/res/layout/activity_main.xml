@@ -11,35 +11,61 @@
 
     <Button
         android:id="@+id/buttonToggleGreenLed"
-        android:layout_width="wrap_content"
+        android:layout_width="125dp"
         android:layout_height="wrap_content"
         android:onClick="onBBBClick"
-        android:text="GREEN"
+        android:text="VENTILATION"
+        android:background="@android:drawable/btn_default"
         android:layout_marginTop="25dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lvNewDevices"/>
 
     <Button
         android:id="@+id/buttonToggleRedLed"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:onClick="onBBBClick"
-        android:text="RED"
+        android:text="SENSOR"
+        android:background="@android:drawable/btn_default"
         android:layout_marginTop="25dp"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="25dp"
         app:layout_constraintStart_toEndOf="@+id/buttonToggleGreenLed"
         app:layout_constraintTop_toBottomOf="@+id/lvNewDevices" />
+
+    <Button
+        android:id="@+id/btnBT"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="25dp"
+        android:onClick="toBTChild"
+        android:text="BT"
+        android:background="@android:drawable/btn_default"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonToggleRedLed"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <Button
         android:id="@+id/buttonTogglePotOn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@android:drawable/btn_default"
         android:onClick="onBBBClick"
         android:text="RECV"
-        android:layout_marginTop="25dp"
-        android:layout_marginLeft="50dp"
-        app:layout_constraintStart_toEndOf="@+id/buttonToggleRedLed"
-        app:layout_constraintTop_toBottomOf="@+id/lvNewDevices" />
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="25dp"
+        app:layout_constraintTop_toBottomOf="@id/main_graph"
+        app:layout_constraintStart_toEndOf="@id/btngraph" />
+
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/main_graph"
+        android:layout_width="fill_parent"
+        android:layout_height="400dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonToggleRedLed"
+        app:seriesColor="#ee0000"
+        app:seriesType="line" />/>
 
     <Button
         android:id="@+id/btnSQL"
@@ -50,7 +76,7 @@
         android:text="SQL"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonToggleRedLed" />
+        app:layout_constraintTop_toBottomOf="@+id/main_graph" />
 
     <Button
         android:id="@+id/btngraph"
@@ -62,7 +88,7 @@
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonToggleRedLed" />
+        app:layout_constraintTop_toBottomOf="@+id/main_graph" />
 
     <Button
         android:id="@+id/btnReadFile"
@@ -87,17 +113,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnSQL" />
 
-    <Button
-        android:id="@+id/btnBT"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="BT"
-        android:onClick="toBTChild"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnDeleteFileContents"
-        app:layout_constraintVertical_bias="0.454" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

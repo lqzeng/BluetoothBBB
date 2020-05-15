@@ -1,6 +1,7 @@
 package au.edu.rmit.bluetoothcommunication;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -40,6 +41,8 @@ public class BTChild extends Activity implements AdapterView.OnItemClickListener
     ListView lvNewDevices;
     private static final String TAG = "BTChild";
 
+    public boolean bt_connected;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +60,11 @@ public class BTChild extends Activity implements AdapterView.OnItemClickListener
         lvNewDevices = (ListView) findViewById(R.id.lvNewDevices);
         mBTDevices = new ArrayList<>();
 
-        //broadcasts when bond state changes (ie. pairing)
+
+        //get bool flag for bt connectivity passed as extra
+
+        Bundle bundle = getIntent().getExtras();
+        bt_connected = bundle.getBoolean("bt_connected");
 
         lvNewDevices.setOnItemClickListener(BTChild.this);
 
@@ -313,6 +320,7 @@ public class BTChild extends Activity implements AdapterView.OnItemClickListener
 
 
     //--- Click on button, close activity and return to calling activity.
+    @SuppressLint("WrongConstant")
     public void onReturnClick(View view) {// function named in OnClick
 
         //this covers event where discovery was on, but connection was not made
@@ -322,10 +330,29 @@ public class BTChild extends Activity implements AdapterView.OnItemClickListener
             unregisterReceiver(mBroadcastReceiver3);
         }
 
+
+        if(mBTDevice!=null) {
+            if (mBluetoothAdapter.getState() == mBTDevice.BOND_BONDED) {
+                bt_connected = true;
+            }
+        } else {
+                bt_connected = false;
+        }
+        Log.d(TAG, "is bt connected? " + bt_connected);
+
+        try {
+            unregisterReceiver(mBroadcastReceiver1);
+            unregisterReceiver(mBroadcastReceiver2);
+        } catch(IllegalArgumentException e) {
+
+            //e.printStackTrace();
+        }
+
+
         //--- return information via intent.
         Intent replyIntent = new Intent();
         // Return some hard-coded values
-        replyIntent.putExtra("returnMessage", "Returning from BT child page");
+        replyIntent.putExtra("bt_connected", bt_connected);
         setResult(RESULT_OK, replyIntent);
         finish(); // close this activity.
     }

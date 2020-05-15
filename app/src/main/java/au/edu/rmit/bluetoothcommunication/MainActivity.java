@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -34,7 +36,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
     // Create local variables
     Button btnReadFile;
     Button btnDeleteFileContents;
-
+    Button btnBT;
+    Button btnToggleGreenLed;
+    Button btnToggleRedLed;
+    Button btnTogglePotOn;
 
     @Override
     public void onClick(View v) {
@@ -54,6 +59,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
     private static final int REQUEST_CODE2 = 20;
     private static final int REQUEST_CODE3 = 30;
 
+    // bool for BT conncted or not
+    private boolean bt_connected = false;
+
+    // bool for sensors on off
+    private boolean vent_on = false;
+    private boolean sense_on = false;
+    private boolean recv_on = false;
+
 
     /** start methods **/
 
@@ -64,10 +77,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // create Buttons
+        // create Button pointers
 
         btnReadFile = (Button) findViewById(R.id.btnReadFile);
         btnDeleteFileContents = (Button) findViewById(R.id.btnDeleteFileContents);
+        btnBT = (Button) findViewById(R.id.btnBT);
+
+        // change these names later for consistency
+        btnToggleGreenLed = (Button) findViewById(R.id.buttonToggleGreenLed);
+        btnToggleRedLed = (Button) findViewById(R.id.buttonToggleRedLed);
+        btnTogglePotOn = (Button) findViewById(R.id.buttonTogglePotOn);
 
     }
 
@@ -163,14 +182,48 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
             case R.id.buttonToggleGreenLed:
                 writeRead = new WriteReadBBB(_socket, BB.GREEN_LED);
                 new Thread(writeRead).start();
+
+                if (vent_on == false){
+                    btnToggleGreenLed.setBackgroundResource(R.color.green);
+                    vent_on = true;
+                    Toast.makeText(MainActivity.this, "Ventilation ON", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    btnToggleGreenLed.setBackgroundResource(android.R.drawable.btn_default);
+                    vent_on = false;
+                    Toast.makeText(MainActivity.this, "Ventilation OFF", Toast.LENGTH_SHORT).show();
+                }
                 break;
+
             case R.id.buttonToggleRedLed:
                 writeRead = new WriteReadBBB(_socket, BB.RED_LED);
                 new Thread(writeRead).start();
+
+                if (sense_on == false){
+                    btnToggleRedLed.setBackgroundResource(R.color.red);
+                    sense_on = true;
+                    Toast.makeText(MainActivity.this, "SENSOR ON", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    btnToggleRedLed.setBackgroundResource(android.R.drawable.btn_default);
+                    sense_on = false;
+                    Toast.makeText(MainActivity.this, "SENSOR OFF", Toast.LENGTH_SHORT).show();
+                }
                 break;
+
             case R.id.buttonTogglePotOn:
                 writeRead = new WriteReadBBB(_socket, BB.POT_ON);
                 new Thread(writeRead).start();
+                if (recv_on == false){
+                    btnTogglePotOn.setBackgroundResource(R.color.orange);
+                    recv_on = true;
+                    Toast.makeText(MainActivity.this, "RECEIVE DATA ON", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    btnTogglePotOn.setBackgroundResource(android.R.drawable.btn_default);
+                    recv_on = false;
+                    Toast.makeText(MainActivity.this, "RECEIVE DATA OFF", Toast.LENGTH_SHORT).show();
+                }
                 break;
             default:
                 Log.i(TAG, "unknown click event");
@@ -244,28 +297,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
         // come back via onResume() event.
     }
 
-    //--- Handle returned data from child.
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent replyIntent) {
-
-        // just debugging here or do something with data passed back
-
-        Log.d(TAG, "onActivityResult: returning from secondary activity");
-
-        super.onActivityResult(requestCode, resultCode, replyIntent);
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) { // right child and OK result.
-
-            if (replyIntent.hasExtra("returnMessage")) {
-
-                //remove the unnecessary messages, say return from child
-            }
-        }
-
-    }
 
     public void toBTChild(View view){
 
         Intent myIntent = new Intent(MainActivity.this, BTChild.class);
+        myIntent.putExtra("bt_connected", bt_connected);
+        Log.d(TAG, "sending bt_connected = " + bt_connected);
         startActivityForResult(myIntent, REQUEST_CODE3);
     }
 
@@ -275,12 +312,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
         startActivityForResult(myIntent, REQUEST_CODE2);
     }
 
+    //--- Handle returned data from child.
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent replyIntent) {
+
+        // just debugging here or do something with data passed back
+
+        Log.d(TAG, "onActivityResult: returning from secondary activity");
+
+        super.onActivityResult(requestCode, resultCode, replyIntent);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE3) { // right child and OK result.
+
+            //getting bt_connected flag back from child
+            if (replyIntent.hasExtra("bt_connected")) {
+
+                bt_connected = replyIntent.getBooleanExtra("bt_connected", false);
+                Log.d(TAG, "onActivityResult: bt_connected = " + bt_connected);
+
+                if (bt_connected ==true){
+                    btnBT.setBackgroundResource(R.color.blue);
+                } else btnBT.setBackgroundResource(android.R.drawable.btn_default);
+
+            }
+        }
+
+    }
+
     // onDestroy destroys the broadcast receivers when the event is finished, through the child class
 
     @Override
     protected void onDestroy() {
         Log.d(TAG, "onDestroy: called.");
         super.onDestroy();
+
+        //unregister any receivers that may not have been unregistered
         myBTChild.unregisterReceivers();
 
     }
