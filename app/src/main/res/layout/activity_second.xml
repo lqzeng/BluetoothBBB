@@ -10,14 +10,14 @@
     android:focusableInTouchMode="true" >
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Name"
-        android:id="@+id/textView"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentTop="true"
+        android:text="Name"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -35,7 +35,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Ventilation"
         android:id="@+id/textView3"
-        android:layout_below="@+id/editText_surname"
+        android:layout_below="@+id/editText_TrafficCount"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -50,7 +50,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText_surname"
+        android:id="@+id/editText_TrafficCount"
         android:layout_alignTop="@+id/textView2"
         android:layout_toRightOf="@+id/textView2"
         android:layout_toEndOf="@+id/textView2" />
@@ -58,8 +58,8 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText_Marks"
-        android:layout_below="@+id/editText_surname"
+        android:id="@+id/editText_Ventilation"
+        android:layout_below="@+id/editText_TrafficCount"
         android:layout_toRightOf="@+id/textView3"
         android:layout_toEndOf="@+id/textView3" />
 
@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:text="Add Data"
         android:id="@+id/button_add"
-        android:layout_below="@+id/editText_Marks"
+        android:layout_below="@+id/editText_Ventilation"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="150dp"
@@ -110,7 +110,7 @@
         android:id="@+id/textView_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editText_Marks"
+        android:layout_below="@+id/editText_Ventilation"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="30dp"
@@ -139,5 +139,14 @@
         android:onClick="onReturnClick"
         android:layout_centerInParent="true"
         android:text="Return" />
+
+    <Button
+        android:id="@+id/button_deleteAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete ALL"
+        android:layout_centerVertical="true"
+        android:layout_below="@+id/btnReturn"
+        android:onClick="deleteAllData"/>
 
 </RelativeLayout>

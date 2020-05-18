@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
     Button btnToggleRedLed;
     Button btnTogglePotOn;
 
+
+
     @Override
     public void onClick(View v) {
         //do nothing here for child extension
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
 
     // create child object for unregistering receivers
     BTChild myBTChild = new BTChild();
+
 
     // create enum for BB
     public enum BB {UNKNOWN_LED, GREEN_LED, RED_LED, POT_ON};
@@ -100,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
                                         public void onClick(View view) {
                                             Log.d(TAG, "onbtnReadFileClick: reading file.");
                                             readFromFile(getApplicationContext());
+
                                         }
                                     }
         );
@@ -151,12 +155,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
                         _writer.flush();
                         break;
                     case RED_LED:
-                        Log.i(LOG, "write red");
-                        _writer.write("red\n");
+                        Log.i(LOG, "toggle traffic sensor");
+                        _writer.write("sensor\n");
                         _writer.flush();
                         break;
                     case POT_ON:
-                        Log.i(LOG, "Turning on data receive");
+                        Log.i(LOG, "toggle ventilation data receive");
                         _writer.write("receive_data\n");
                         _writer.flush();
                         break;

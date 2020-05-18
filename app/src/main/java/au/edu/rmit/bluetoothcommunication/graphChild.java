@@ -1,6 +1,7 @@
 package au.edu.rmit.bluetoothcommunication;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -37,8 +38,10 @@ public class graphChild extends Activity {
 
     Button btngraphFile;
     Button btngraphDB;
-    DatabaseHelper myDb = new DatabaseHelper(this);
+
     GraphView graph;
+
+    public DatabaseHelper myDb = new DatabaseHelper(this);
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -81,7 +84,7 @@ public class graphChild extends Activity {
 
         // accessing the database here
         //Cursor res = myDb.getAllData();
-        Cursor res = myDb.getBuildingData("building 80");
+        Cursor res = myDb.getBuildingData("80");
         if (res.getCount() == 0) {
             // show message
             Log.d(TAG, "Error: Nothing found");

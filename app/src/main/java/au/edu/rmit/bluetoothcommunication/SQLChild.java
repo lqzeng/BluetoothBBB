@@ -1,9 +1,11 @@
 package au.edu.rmit.bluetoothcommunication;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -23,10 +25,11 @@ import android.view.View;          // View widget include.
 public class SQLChild extends Activity {
 
     DatabaseHelper myDb;
-    EditText editName, editSurname, editMarks, editTextId;
+    EditText editName, editTrafficCount, editVentilation, editTextId;
     Button btnAddData;
     Button btnviewAll;
     Button btnDelete;
+    Button btnDeleteAll;
 
     Button btnviewUpdate;
 
@@ -37,13 +40,14 @@ public class SQLChild extends Activity {
         myDb = new DatabaseHelper(this);
 
         editName = (EditText) findViewById(R.id.editText_name);
-        editSurname = (EditText) findViewById(R.id.editText_surname);
-        editMarks = (EditText) findViewById(R.id.editText_Marks);
+        editTrafficCount = (EditText) findViewById(R.id.editText_TrafficCount);
+        editVentilation = (EditText) findViewById(R.id.editText_Ventilation);
         editTextId = (EditText) findViewById(R.id.editText_id);
         btnAddData = (Button) findViewById(R.id.button_add);
         btnviewAll = (Button) findViewById(R.id.button_viewAll);
         btnviewUpdate = (Button) findViewById(R.id.button_update);
         btnDelete = (Button) findViewById(R.id.button_delete);
+        btnDeleteAll = (Button) findViewById(R.id.button_deleteAll);
         AddData();
         viewAll();
         UpdateData();
@@ -65,6 +69,10 @@ public class SQLChild extends Activity {
         );
     }
 
+    public void deleteAllData(View view){
+        myDb.deleteAllData();
+    }
+
     public void UpdateData() {
         btnviewUpdate.setOnClickListener(
                 new View.OnClickListener() {
@@ -72,7 +80,7 @@ public class SQLChild extends Activity {
                     public void onClick(View v) {
                         boolean isUpdate = myDb.updateData(editTextId.getText().toString(),
                                 editName.getText().toString(),
-                                editSurname.getText().toString(), editMarks.getText().toString());
+                                editTrafficCount.getText().toString(), editVentilation.getText().toString());
                         if (isUpdate == true)
                             Toast.makeText(SQLChild.this, "Data Update", Toast.LENGTH_LONG).show();
                         else
@@ -88,8 +96,8 @@ public class SQLChild extends Activity {
                     @Override
                     public void onClick(View v) {
                         boolean isInserted = myDb.insertData(editName.getText().toString(),
-                                editSurname.getText().toString(),
-                                editMarks.getText().toString());
+                                editTrafficCount.getText().toString(),
+                                editVentilation.getText().toString());
                         if (isInserted == true)
                             Toast.makeText(SQLChild.this, "Data Inserted", Toast.LENGTH_LONG).show();
                         else
@@ -164,25 +172,6 @@ public class SQLChild extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    /*
-    //--- Constructor
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_second);
-
-        //--- get GUI references.
-
-        //--- now get intent information
-        Intent intent = getIntent();
-        if (intent.hasExtra("integervalue")) {
-
-            //do something here, see advanceGUI lab.
-        }
-        else { }// do something here                                    //0 is the error
-
-    }*/
 
 
     //--- Click on button, close activity and return to calling activity.

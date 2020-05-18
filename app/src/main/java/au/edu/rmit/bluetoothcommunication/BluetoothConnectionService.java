@@ -1,16 +1,19 @@
 package au.edu.rmit.bluetoothcommunication;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcel;
 import android.os.ParcelUuid;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 
@@ -37,7 +40,7 @@ import java.util.UUID;
 -- the connected thread will start
 -- send recv data now possible.
  ***/
-public class BluetoothConnectionService {
+public class BluetoothConnectionService extends Activity {
 
     ParcelUuid[]  mDeviceUUIDs;
     private ArrayList<String> uuidStrings;
@@ -65,12 +68,16 @@ public class BluetoothConnectionService {
 
     public static BluetoothSocket socketForMain;
 
+    public DatabaseHelper myDbHelper;
+
 
     // constructor
     public BluetoothConnectionService(Context context){
         mContext = context;
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
+        myDbHelper = new DatabaseHelper(mContext);
+        Log.d(TAG, "Created database helper");
         // run the start method
         start();
 
@@ -310,8 +317,14 @@ public class BluetoothConnectionService {
                     String incomingMessage = new String(buffer, 0, bytes);
                     Log.d(TAG, "InputStream: " + incomingMessage);
 
+                    //split the incoming message into an array so it can be sent to each column in the db.
+                    String split[] = incomingMessage.split(" ",0);
+
+                    // write to Db
+                    writeToDb(split);
+
                     //write to File
-                    writeToFile(incomingMessage, mContext);
+                    //writeToFile(incomingMessage, mContext);
                 } catch (IOException e) {
                     Log.e(TAG, "write: Error reading Input Stream. " + e.getMessage());
                     break;
@@ -371,6 +384,7 @@ public class BluetoothConnectionService {
      * Code to receive pot data from BBB and do something with it
      */
 
+
     private void writeToFile(String data,Context context) {
         try {
             String FILENAME = "config.txt";
@@ -385,5 +399,19 @@ public class BluetoothConnectionService {
         }
     }
 
+    /**
+     * Code to receive pot data from BBB and write it to the database
+     */
+
+
+    private void writeToDb(String data[]){
+        try {
+            myDbHelper.insertData(data[0], data[1], data[2]);
+            Log.d(TAG, "writeToDb: written to " + myDbHelper.DATABASE_NAME);
+        } catch (NullPointerException e){
+            Log.d(TAG, "writeToDb: cant find database");
+            e.printStackTrace();
+        }
+    }
 
 }
