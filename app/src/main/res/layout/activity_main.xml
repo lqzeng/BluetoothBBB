@@ -7,18 +7,17 @@
     android:layout_height="match_parent"
     android:padding="20dp"
     tools:context="au.edu.rmit.bluetoothcommunication.MainActivity">
-    
+
 
     <Button
         android:id="@+id/buttonToggleGreenLed"
         android:layout_width="125dp"
         android:layout_height="wrap_content"
+        android:background="@android:drawable/btn_default"
         android:onClick="onBBBClick"
         android:text="VENTILATION"
-        android:background="@android:drawable/btn_default"
-        android:layout_marginTop="25dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lvNewDevices"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/buttonToggleRedLed"
@@ -27,10 +26,9 @@
         android:onClick="onBBBClick"
         android:text="SENSOR"
         android:background="@android:drawable/btn_default"
-        android:layout_marginTop="25dp"
         android:layout_marginLeft="25dp"
         app:layout_constraintStart_toEndOf="@+id/buttonToggleGreenLed"
-        app:layout_constraintTop_toBottomOf="@+id/lvNewDevices" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
         android:id="@+id/btnBT"
@@ -44,28 +42,160 @@
         app:layout_constraintStart_toEndOf="@+id/buttonToggleRedLed"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <Button
         android:id="@+id/buttonTogglePotOn"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
         android:background="@android:drawable/btn_default"
         android:onClick="onBBBClick"
-        android:text="RECV"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="25dp"
-        app:layout_constraintTop_toBottomOf="@id/main_graph"
-        app:layout_constraintStart_toEndOf="@id/btngraph" />
-
-    <com.jjoe64.graphview.GraphView
-        android:id="@+id/main_graph"
-        android:layout_width="fill_parent"
-        android:layout_height="400dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="RECEIVE DATA"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonToggleGreenLed"/>
+
+    <EditText
+        android:id="@+id/editTextReceiveLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop = "25dp"
+        android:layout_marginLeft = "25dp"
+        android:hint="Enter Building Number Here"
+        app:layout_constraintStart_toEndOf="@+id/buttonTogglePotOn"
         app:layout_constraintTop_toBottomOf="@+id/buttonToggleRedLed"
-        app:seriesColor="#ee0000"
-        app:seriesType="line" />/>
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/textNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop = "25dp"
+        android:layout_marginLeft = "25dp"
+        android:text="Building"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonTogglePotOn"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textName"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft = "25dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        app:layout_constraintStart_toEndOf="@+id/textNameLabel"
+        app:layout_constraintTop_toBottomOf="@+id/buttonTogglePotOn" />
+
+    <TextView
+        android:id="@+id/textSensorLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop = "25dp"
+        android:layout_marginLeft = "25dp"
+        android:text="Traffic Count"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textNameLabel"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textSensor"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft = "25dp"
+        app:layout_constraintStart_toEndOf="@+id/textSensorLabel"
+        app:layout_constraintTop_toBottomOf="@+id/textName"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+    <TextView
+        android:id="@+id/textVentilationLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop = "25dp"
+        android:layout_marginLeft = "25dp"
+        android:text="Ventilation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textSensorLabel"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textVentilation"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft = "25dp"
+        app:layout_constraintStart_toEndOf="@+id/textVentilationLabel"
+        app:layout_constraintTop_toBottomOf="@+id/textSensor"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+    <TextView
+        android:id="@+id/textTimestampLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop = "25dp"
+        android:layout_marginLeft = "25dp"
+        android:text="Last Updated: "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textVentilationLabel"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textTimestamp"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft = "25dp"
+        app:layout_constraintStart_toEndOf="@+id/textTimestampLabel"
+        app:layout_constraintTop_toBottomOf="@+id/textVentilation"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <TextView
+        android:id="@+id/updateHint"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop = "20dp"
+        android:text="Get Updates using buttons below "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textTimestampLabel"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <Button
+        android:id="@+id/btnUpdateMain"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="50dp"
+        android:onClick="updateData"
+        android:text="Recent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textTimestampLabel" />
+
+    <Button
+        android:id="@+id/btnUpdateSpecific"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft = "25dp"
+        android:onClick="updateDataSpecific"
+        android:text="Specific"
+        app:layout_constraintStart_toEndOf="@+id/btnUpdateMain"
+        app:layout_constraintTop_toBottomOf="@+id/textTimestamp"/>
+
+    <EditText
+        android:id="@+id/editTextUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop = "50dp"
+        android:layout_marginLeft = "25dp"
+        android:hint="Enter Building #"
+        app:layout_constraintStart_toEndOf="@+id/btnUpdateSpecific"
+        app:layout_constraintTop_toBottomOf="@+id/textTimestamp"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
 
     <Button
         android:id="@+id/btnSQL"
@@ -76,20 +206,10 @@
         android:text="SQL"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_graph" />
+        app:layout_constraintTop_toBottomOf="@+id/btnUpdateMain" />
 
-    <Button
-        android:id="@+id/btngraph"
-        android:layout_width="120dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:onClick="toGraphChild"
-        android:text="Graph"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_graph" />
 
+    <!--
     <Button
         android:id="@+id/btnReadFile"
         android:layout_width="100dp"
@@ -100,6 +220,21 @@
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnSQL" />
+        -->
+
+    <Button
+        android:id="@+id/btngraph"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginLeft="36dp"
+        android:layout_marginTop="20dp"
+        android:onClick="toGraphChild"
+        android:text="Graph"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/btnSQL"
+        app:layout_constraintTop_toBottomOf="@+id/btnUpdateSpecific"
+        tools:layout_editor_absoluteY="536dp" />
 
     <Button
         android:id="@+id/btnDeleteFileContents"
@@ -112,6 +247,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnSQL" />
+
 
 
 

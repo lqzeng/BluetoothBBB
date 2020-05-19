@@ -94,6 +94,8 @@ public class graphChild extends Activity {
         //StringBuffer buffer = new StringBuffer();
         while (res.moveToNext()) {
             //Log.d(TAG, "reading db:" + res.getString(3));
+
+            // this will plot the ventilation
             yval_db.add(res.getString(3));
         }
 

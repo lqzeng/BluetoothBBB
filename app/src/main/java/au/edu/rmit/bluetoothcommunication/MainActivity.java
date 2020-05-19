@@ -3,15 +3,19 @@ package au.edu.rmit.bluetoothcommunication;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -24,8 +28,15 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.sql.Timestamp;
+import java.security.cert.CertPath;
+import java.security.cert.CertificateFactory;
+import java.util.Date;
+
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.w3c.dom.Text;
 
 
 //MAC ADDRESS OF PHONE  A0:93:47:65:D0:26
@@ -40,7 +51,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
     Button btnToggleGreenLed;
     Button btnToggleRedLed;
     Button btnTogglePotOn;
+    Button btnUpdateMain;
+    Button btnUpdateSpecific;
 
+    TextView textName;
+    TextView textVentilation;
+    TextView textSensor;
+    TextView textTimestamp;
+    EditText editTextReceive;
+    EditText editTextUpdate;
+
+
+    public DatabaseHelper myDb = new DatabaseHelper(this);
 
 
     @Override
@@ -82,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
 
         // create Button pointers
 
-        btnReadFile = (Button) findViewById(R.id.btnReadFile);
+        //btnReadFile = (Button) findViewById(R.id.btnReadFile);
         btnDeleteFileContents = (Button) findViewById(R.id.btnDeleteFileContents);
         btnBT = (Button) findViewById(R.id.btnBT);
 
@@ -91,7 +113,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
         btnToggleRedLed = (Button) findViewById(R.id.buttonToggleRedLed);
         btnTogglePotOn = (Button) findViewById(R.id.buttonTogglePotOn);
 
+        btnUpdateMain = (Button) findViewById(R.id.btnUpdateMain);
+        btnUpdateSpecific = (Button) findViewById(R.id.btnUpdateSpecific);
+
+        // create textview pointers
+        textName = (TextView)findViewById(R.id.textName);
+        textVentilation = (TextView)findViewById(R.id.textVentilation);
+        textSensor = (TextView)findViewById(R.id.textSensor);
+        textTimestamp = (TextView)findViewById(R.id.textTimestamp);
+
+        //create editText pointer
+        editTextReceive = (EditText)findViewById(R.id.editTextReceiveLabel);
+        editTextReceive.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        editTextUpdate = (EditText)findViewById(R.id.editTextUpdate);
+        editTextUpdate.setInputType(InputType.TYPE_CLASS_NUMBER);
     }
+
+    // onClick method for updating textVent and sensor
 
 
     // onClick method for reading file
@@ -124,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
     }
 
 
-    /** this will be the function to send messages to the BBB
+    /** this will be the function to send messages to the BBB, called in onBBBClick
      *
      */
 
@@ -137,7 +176,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
         private Reader _reader;
         private Writer _writer;
 
-        private final StringBuilder _stringBuilder = new StringBuilder();
+        //private final StringBuilder _stringBuilder = new StringBuilder();
+        String building_number = editTextReceive.getText().toString();
 
         WriteReadBBB(BluetoothSocket socket, BB BB) {
             _socket = socket;
@@ -150,8 +190,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
 
                 switch(_BB) {
                     case GREEN_LED:
-                        Log.i(LOG, "write green");
-                        _writer.write("green\n");
+                        Log.i(LOG, "toggle ventilation");
+                        _writer.write("ventilation\n");
                         _writer.flush();
                         break;
                     case RED_LED:
@@ -160,8 +200,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
                         _writer.flush();
                         break;
                     case POT_ON:
+                        // add ventilation from edit text receive label
                         Log.i(LOG, "toggle ventilation data receive");
-                        _writer.write("receive_data\n");
+
+                        _writer.write("receive_data "+ building_number + "\n");
                         _writer.flush();
                         break;
                 }
@@ -234,6 +276,67 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
         }
 
     }
+
+    /**
+     * update the textviews in main
+     */
+
+    // method to get the most recent data entry to database
+
+    public void updateData(View view){
+
+        Cursor res = myDb.getLastData();
+        // now get the last database entry for these textviews
+        textName.setText(res.getString(1));
+        textSensor.setText(res.getString(2));
+        //converting to a percentage.
+        textVentilation.setText(Double.parseDouble(res.getString(3)) * 100 + " %");
+
+        //get timestamp, convert tiem to just seconds
+        long time = System.currentTimeMillis();
+        Timestamp timestamp = new Timestamp(time);
+        textTimestamp.setText(timestamp.toString());
+        //Log.d(TAG,"updateData: " + timestamp);
+    }
+
+    //method to get specific last building number entry
+    public void updateDataSpecific(View view){
+
+        //get Building number from editText
+        String building_number = editTextUpdate.getText().toString();
+        Log.d(TAG, "updateDataSpefic:" + building_number);
+
+        // checking for empty
+        if (building_number.matches("")){
+            Toast.makeText(this, "Enter Building #", Toast.LENGTH_SHORT).show();
+        }
+
+        if(!building_number.matches("")){
+            //call function to check if it exists in db
+            if (myDb.checkBuildingDataExists(building_number) == true) {
+
+                //call the get most recent last building data
+                Cursor res = myDb.getLastBuildingData(building_number);
+
+                // now get the last database entry for these textviews
+                textName.setText(res.getString(1));
+                textSensor.setText(res.getString(2));
+                //converting to a percentage.
+                textVentilation.setText(Double.parseDouble(res.getString(3)) * 100 + " %");
+
+                //get timestamp, convert tiem to just seconds
+                long time = System.currentTimeMillis();
+                Timestamp timestamp = new Timestamp(time);
+                textTimestamp.setText(timestamp.toString());
+                //Log.d(TAG,"updateData: " + timestamp);
+            }
+            else {
+                Toast.makeText(this, "Building # does not exist", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+
 
     /**
     read from data file
@@ -335,7 +438,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
 
                 if (bt_connected ==true){
                     btnBT.setBackgroundResource(R.color.blue);
-                } else btnBT.setBackgroundResource(android.R.drawable.btn_default);
+                } else {
+                    btnBT.setBackgroundResource(android.R.drawable.btn_default);
+
+                    // if no bluetooth connection just covers the buttons lighting up
+
+                    btnToggleGreenLed.setBackgroundResource(android.R.drawable.btn_default);
+                    vent_on = false;
+
+                    btnToggleRedLed.setBackgroundResource(android.R.drawable.btn_default);
+                    sense_on = false;
+
+                    btnTogglePotOn.setBackgroundResource(android.R.drawable.btn_default);
+                    recv_on = false;
+
+                }
 
             }
         }

@@ -3,6 +3,7 @@ package au.edu.rmit.bluetoothcommunication;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -31,12 +32,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-
-    /*
-    public void deleteTable(SQLiteDatabase db){
-        db.execSQL("DROP TABLE IF EXISTS "+ TABLE_NAME);
-    }*/
-
     public boolean insertData(String name,String traffic_count,String ventilation) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -51,10 +46,50 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getAllData() {
-        String TAG = "getAllData";
-        Log.d(TAG, "inside getAllData()");
+        //String TAG = "getAllData";
+        //Log.d(TAG, "inside getAllData()");
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("select * from "+TABLE_NAME,null);
+        Cursor res = db.rawQuery("select * from " + TABLE_NAME, null);
+        return res;
+    }
+
+    // getter for update recent
+    public Cursor getLastData() {
+        //String TAG = "getLastData";
+        //Log.d(TAG, "inside getLastData()");
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery = "SELECT  * FROM " + TABLE_NAME;
+        Cursor res = db.rawQuery(selectQuery, null);
+        res.moveToLast();
+        return res;
+    }
+
+    // check that the building number exists
+    public boolean checkBuildingDataExists(String buildingNumber){
+        String TAG = "checkBuildingDataExists";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = null;
+        String query = "Select name from " + TABLE_NAME + " where name = " + buildingNumber;
+        res= db.rawQuery(query,null);
+        Log.d(TAG, "inside method. cursor count " + res.getCount());
+
+        if(res.getCount()>0)
+        {
+            //building exists
+            return true;
+        }else {
+            //building does not exist
+            return false;
+        }
+    }
+
+    // getter for update specific
+    public Cursor getLastBuildingData(String buildingNumber) {
+        String TAG = "getLastBuildingData";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("SELECT  * FROM buildings_table where name = ?" , new String[]{buildingNumber});
+        res.moveToLast();
         return res;
     }
 
