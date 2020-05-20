@@ -309,31 +309,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
         // checking for empty
         if (building_number.matches("")){
             Toast.makeText(this, "Enter Building #", Toast.LENGTH_SHORT).show();
+
+            //end function early
+            return;
         }
 
-        if(!building_number.matches("")){
-            //call function to check if it exists in db
-            if (myDb.checkBuildingDataExists(building_number) == true) {
+        Cursor res = myDb.getLastBuildingData(building_number);
 
-                //call the get most recent last building data
-                Cursor res = myDb.getLastBuildingData(building_number);
-
-                // now get the last database entry for these textviews
-                textName.setText(res.getString(1));
-                textSensor.setText(res.getString(2));
-                //converting to a percentage.
-                textVentilation.setText(Double.parseDouble(res.getString(3)) * 100 + " %");
-
-                //get timestamp, convert tiem to just seconds
-                long time = System.currentTimeMillis();
-                Timestamp timestamp = new Timestamp(time);
-                textTimestamp.setText(timestamp.toString());
-                //Log.d(TAG,"updateData: " + timestamp);
-            }
-            else {
-                Toast.makeText(this, "Building # does not exist", Toast.LENGTH_SHORT).show();
-            }
+        if (res.getCount()==0) {
+            Toast.makeText(this, "Building # does not exist", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Error: Nothing found");
+            return;
         }
+
+        // now get the last database entry for these textviews
+        textName.setText(res.getString(1));
+        textSensor.setText(res.getString(2));
+        //converting to a percentage.
+        textVentilation.setText(Double.parseDouble(res.getString(3)) * 100 + " %");
+
+        //get timestamp, convert tiem to just seconds
+        long time = System.currentTimeMillis();
+        Timestamp timestamp = new Timestamp(time);
+        textTimestamp.setText(timestamp.toString());
+        //Log.d(TAG,"updateData: " + timestamp);
 
     }
 

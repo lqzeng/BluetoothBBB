@@ -48,6 +48,10 @@ public class SQLChild extends Activity {
         btnviewUpdate = (Button) findViewById(R.id.button_update);
         btnDelete = (Button) findViewById(R.id.button_delete);
         btnDeleteAll = (Button) findViewById(R.id.button_deleteAll);
+
+        btnDeleteAll.setBackgroundResource(R.color.red);
+
+
         AddData();
         viewAll();
         UpdateData();

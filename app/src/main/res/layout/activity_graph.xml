@@ -15,7 +15,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:seriesType="line"
-        app:seriesColor="#ee0000" />/>
+        app:seriesColor="#ee0000" />
+
+
+    <Button
+        android:id="@+id/btngraphVent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop = "50dp"
+        android:text="GRAPH VENTILATION"
+        android:onClick="graphVent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/graph" />
+
+    <EditText
+        android:id="@+id/editBuildingNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop = "50dp"
+        android:layout_marginLeft = "25dp"
+        android:hint="Enter Building #"
+        app:layout_constraintStart_toEndOf="@+id/btngraphVent"
+        app:layout_constraintTop_toBottomOf="@+id/graph"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <Button
         android:id="@+id/btnReturn"
@@ -29,8 +51,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btngraphFile" />
+        app:layout_constraintTop_toBottomOf="@+id/btngraphVent" />
 
+
+    <!--
     <Button
         android:id="@+id/btngraphFile"
         android:layout_width="wrap_content"
@@ -41,16 +65,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graph" />
-
-    <Button
-        android:id="@+id/btngraphDB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="DB"
-        android:onClick="graphDB"
-        app:layout_constraintBottom_toTopOf="@+id/btngraphFile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/graph" />
+        -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

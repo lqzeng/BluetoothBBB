@@ -7,8 +7,11 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -26,6 +29,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import android.widget.Button;
@@ -36,10 +40,14 @@ public class graphChild extends Activity {
 
     //create variables for use in functions
 
-    Button btngraphFile;
-    Button btngraphDB;
+    //Button btngraphFile;
+    Button btngraphVent;
+    EditText editTextBuildingNumber;
 
     GraphView graph;
+
+    int graph_count = 0;
+    public int[] graphColour = {Color.RED, Color.BLUE, Color.YELLOW , Color.GREEN};
 
     public DatabaseHelper myDb = new DatabaseHelper(this);
 
@@ -50,8 +58,11 @@ public class graphChild extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
 
-        btngraphFile = (Button) findViewById(R.id.btngraphFile);
-        btngraphDB = (Button) findViewById(R.id.btngraphDB);
+        //btngraphFile = (Button) findViewById(R.id.btngraphFile);
+        btngraphVent = (Button) findViewById(R.id.btngraphVent);
+
+        editTextBuildingNumber = (EditText)findViewById(R.id.editBuildingNumber);
+        editTextBuildingNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         //graph settings
         graph = (GraphView) findViewById(R.id.graph);
@@ -64,9 +75,8 @@ public class graphChild extends Activity {
         //graph labels
 
         GridLabelRenderer gridLabel = graph.getGridLabelRenderer();
-        gridLabel.setHorizontalAxisTitle("Time Period");
+        gridLabel.setHorizontalAxisTitle("Data Points");
         gridLabel.setVerticalAxisTitle("Ventilation Percentage");
-
 
 
     }
@@ -75,18 +85,26 @@ public class graphChild extends Activity {
      *
      */
 
-    public void graphDB(View view){
+    public void graphVent(View view){
 
         List<String> yval_db = new ArrayList<String>(10);
 
-
         String TAG = "graphDb";
 
+        //get Building number from editText
+        String building_number = editTextBuildingNumber.getText().toString();
+        Log.d(TAG, "graphDB:" + building_number);
+
+        if (building_number.matches("")){
+            Toast.makeText(this, "Enter Building #", Toast.LENGTH_SHORT).show();
+        }
+
         // accessing the database here
-        //Cursor res = myDb.getAllData();
-        Cursor res = myDb.getBuildingData("80");
+        Cursor res = myDb.getBuildingData(building_number);
+
         if (res.getCount() == 0) {
             // show message
+            Toast.makeText(this, "Building # does not exist", Toast.LENGTH_SHORT).show();
             Log.d(TAG, "Error: Nothing found");
             return;
         }
@@ -103,20 +121,39 @@ public class graphChild extends Activity {
         List<DataPoint> dataPoints = new ArrayList<>(yval_db.size());
 
         for (String y : yval_db) {
-            dataPoints.add(new DataPoint(x_count, Double.parseDouble(y)) );
-            x_count = x_count+5;
+            dataPoints.add(new DataPoint(x_count, Double.parseDouble(y)*100) );
+            x_count = x_count+1;
         }
 
 
         Log.d(TAG, "showing dataPoints array" + dataPoints);
 
+
         //making graph
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(dataPoints.toArray(new DataPoint[dataPoints.size()]));
-        graph.addSeries(series);
-        series.setColor(Color.MAGENTA);
+        graphRender(series);
 
+        /*
+        graph.addSeries(series);
+        series.setTitle(building_number);
+        graph.getLegendRenderer().setVisible(true);
+        //series.setColor(Color.MAGENTA);
+        */
 
     }
+
+    public void graphRender(LineGraphSeries series){
+
+        String building_number = editTextBuildingNumber.getText().toString();
+        graph.addSeries(series);
+        series.setTitle(building_number);
+        graph.getLegendRenderer().setVisible(true);
+
+        series.setColor(graphColour[graph_count]);
+
+        graph_count = graph_count + 1;
+    }
+
 
     /**
      * function to graph from file
@@ -182,4 +219,16 @@ public class graphChild extends Activity {
 
         finish(); // close this activity.
     }
+
+    // hide keyboard method
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (getCurrentFocus() != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
 }
