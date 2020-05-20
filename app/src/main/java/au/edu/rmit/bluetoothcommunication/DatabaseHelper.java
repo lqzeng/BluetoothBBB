@@ -96,10 +96,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // getter for graph function
     public Cursor getBuildingData(String buildingNumber){
         String TAG = "getBuildingData";
-        Log.d(TAG, "inside getBuildingData(), looking for building " + buildingNumber);
+        //Log.d(TAG, "inside getBuildingData(), looking for building " + buildingNumber);
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select * from buildings_table where name = ?" , new String[]{buildingNumber} );
-        Log.d(TAG, "returning to graph function");
+
+        //Log.d(TAG, "returning to graph function");
+        return res;
+    }
+
+    //getter for last 10 graph function
+
+    public Cursor getLast10BuildingData(String buildingNumber){
+        String TAG = "getLast10BuildingData";
+        //Log.d(TAG,"inside function, looking for building " + buildingNumber);
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // the query gets the last 10, but has to sort by descending, so flip it again
+
+        String query = "select * from (select * from buildings_table where name = " + buildingNumber + " order by id desc limit 10) order by id asc";
+        Cursor res = db.rawQuery(query, null);
         return res;
     }
 

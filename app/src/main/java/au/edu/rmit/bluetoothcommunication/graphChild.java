@@ -42,6 +42,7 @@ public class graphChild extends Activity {
 
     //Button btngraphFile;
     Button btngraphVent;
+    Button btngraphVent10;
     EditText editTextBuildingNumber;
 
     GraphView graph;
@@ -60,6 +61,7 @@ public class graphChild extends Activity {
 
         //btngraphFile = (Button) findViewById(R.id.btngraphFile);
         btngraphVent = (Button) findViewById(R.id.btngraphVent);
+        btngraphVent10 = (Button) findViewById(R.id.btngraphVent10);
 
         editTextBuildingNumber = (EditText)findViewById(R.id.editBuildingNumber);
         editTextBuildingNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -97,6 +99,7 @@ public class graphChild extends Activity {
 
         if (building_number.matches("")){
             Toast.makeText(this, "Enter Building #", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         // accessing the database here
@@ -109,10 +112,7 @@ public class graphChild extends Activity {
             return;
         }
 
-        //StringBuffer buffer = new StringBuffer();
         while (res.moveToNext()) {
-            //Log.d(TAG, "reading db:" + res.getString(3));
-
             // this will plot the ventilation
             yval_db.add(res.getString(3));
         }
@@ -142,6 +142,57 @@ public class graphChild extends Activity {
 
     }
 
+    //function to graph just most recent last 10 entries
+    public void graphVent10(View view){
+
+        List<String> yval_db = new ArrayList<String>(10);
+
+        String TAG = "graphVent10";
+
+        //get Building number from editText
+        String building_number = editTextBuildingNumber.getText().toString();
+        Log.d(TAG, "graphVent10:" + building_number);
+
+        if (building_number.matches("")){
+            Toast.makeText(this, "Enter Building #", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Error: Nothing found");
+            return;
+        }
+
+        // accessing the database here
+        Cursor res = myDb.getLast10BuildingData(building_number);
+
+        if (res.getCount() == 0) {
+            // show message
+            Toast.makeText(this, "Building # does not exist", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Error: Nothing found");
+            return;
+        }
+
+        while (res.moveToNext()) {
+            // this will plot the ventilation
+            yval_db.add(res.getString(3));
+        }
+
+        int x_count = 0;
+        List<DataPoint> dataPoints = new ArrayList<>(yval_db.size());
+
+        for (String y : yval_db) {
+            dataPoints.add(new DataPoint(x_count, Double.parseDouble(y)*100) );
+            x_count = x_count+1;
+        }
+
+
+        Log.d(TAG, "showing dataPoints array" + dataPoints);
+
+
+        //making graph
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(dataPoints.toArray(new DataPoint[dataPoints.size()]));
+        graphRender(series);
+
+    }
+
+    //function to render graph
     public void graphRender(LineGraphSeries series){
 
         String building_number = editTextBuildingNumber.getText().toString();

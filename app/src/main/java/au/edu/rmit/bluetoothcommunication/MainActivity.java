@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
         // create Button pointers
 
         //btnReadFile = (Button) findViewById(R.id.btnReadFile);
-        btnDeleteFileContents = (Button) findViewById(R.id.btnDeleteFileContents);
+        //btnDeleteFileContents = (Button) findViewById(R.id.btnDeleteFileContents);
         btnBT = (Button) findViewById(R.id.btnBT);
 
         // change these names later for consistency

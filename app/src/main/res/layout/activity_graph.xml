@@ -11,11 +11,8 @@
         android:id="@+id/graph"
         android:layout_width="fill_parent"
         android:layout_height="400dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:seriesType="line"
-        app:seriesColor="#ee0000" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <Button
@@ -27,6 +24,17 @@
         android:onClick="graphVent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graph" />
+
+    <Button
+        android:id="@+id/btngraphVent10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop = "20dp"
+        android:text="GRAPH LAST 10"
+        android:onClick="graphVent10"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btngraphVent" />
+
 
     <EditText
         android:id="@+id/editBuildingNumber"
@@ -46,6 +54,7 @@
         android:layout_below="@+id/button_delete"
         android:layout_centerInParent="true"
         android:layout_centerVertical="true"
+        android:layout_marginTop = "50dp"
         android:onClick="onReturnClick"
         android:text="Return"
         app:layout_constraintBottom_toBottomOf="parent"

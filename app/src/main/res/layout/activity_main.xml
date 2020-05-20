@@ -226,8 +226,7 @@
         android:id="@+id/btngraph"
         android:layout_width="120dp"
         android:layout_height="50dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginLeft="36dp"
+        android:layout_marginLeft="25dp"
         android:layout_marginTop="20dp"
         android:onClick="toGraphChild"
         android:text="Graph"
@@ -236,6 +235,7 @@
         app:layout_constraintTop_toBottomOf="@+id/btnUpdateSpecific"
         tools:layout_editor_absoluteY="536dp" />
 
+    <!--
     <Button
         android:id="@+id/btnDeleteFileContents"
         android:layout_width="100dp"
@@ -247,7 +247,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnSQL" />
-
+       -->
 
 
 
