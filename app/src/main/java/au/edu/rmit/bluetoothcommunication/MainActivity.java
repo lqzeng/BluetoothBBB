@@ -201,6 +201,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
                         break;
                     case POT_ON:
                         // add ventilation from edit text receive label
+                        // checking for empty
+                        if (building_number.matches("")){
+                            Log.d(TAG, "no buildling number");
+                            Toast.makeText(MainActivity.this, "Enter Building #", Toast.LENGTH_SHORT).show();
+
+                            //end function early
+                            break;
+                        }
+
                         Log.i(LOG, "toggle ventilation data receive");
 
                         _writer.write("receive_data "+ building_number + "\n");
@@ -220,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onBBBClick(View view) {
         WriteReadBBB writeRead;
-
+        String building_number = editTextReceive.getText().toString();
         //get socket from BCS
         _socket = BluetoothConnectionService.socketForMain;
 
@@ -261,6 +270,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnCli
                 writeRead = new WriteReadBBB(_socket, BB.POT_ON);
                 new Thread(writeRead).start();
                 if (recv_on == false){
+                    if (building_number.matches("")){
+                        Log.d(TAG, "no buildling number");
+                        Toast.makeText(MainActivity.this, "Enter Building #", Toast.LENGTH_SHORT).show();
+
+                        //end function early
+                        break;
+                    }
                     btnTogglePotOn.setBackgroundResource(R.color.orange);
                     recv_on = true;
                     Toast.makeText(MainActivity.this, "RECEIVE DATA ON", Toast.LENGTH_SHORT).show();
